@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Image Classification</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Image Classifier</a>
+    </nav>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+          <div class="card">
+            <div class="card-header">
+              <h3>Upload images for classification</h3>
+            </div>
+            <div class="card-body">
+              <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <input type="file" class="form-control-file" name="file" id="file" multiple>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Upload</button>
+              </form>
+              {% if predictions %}
+                {% for prediction in predictions %}
+                  {% set alert_class = '' %}
+                  {% if prediction.rating == 'Excellent' %}
+                    {% set alert_class = 'alert-success' %}
+                  {% elif prediction.rating == 'Very Good' %}
+                    {% set alert_class = 'alert-info' %}
+                  {% elif prediction.rating == 'Good' %}
+                    {% set alert_class = 'alert-primary' %}
+                  {% elif prediction.rating == 'Fair' %}
+                    {% set alert_class = 'alert-warning' %}
+                  {% elif prediction.rating == 'Poor' %}
+                    {% set alert_class = 'alert-danger' %}
+                  {% endif %}
+                  <div class="alert {{ alert_class }} mt-3">
+                    <strong>Prediction for {{ prediction.filename }}:</strong> The predicted condition is {{ prediction.rating }}.
+                  </div>
+                  <div class="mt-3">
+                    <img src="{{ url_for('static', filename='uploads/' + prediction.image_url) }}" class="img-fluid" alt="Uploaded Image">
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
